@@ -1,16 +1,17 @@
-#Initial
+#Joe James
 
 def read_test_file(fname):
     '''taken file then return (vertex, vertices)'''
-
+    data = {}
     # Parse Vertices
     with open(fname, 'r') as file:
         for line in file:
             line = line.rstrip()
             line = line.split()
             vertex, con_nodes = line[0], line[1:]
+            data[vertex] = con_nodes
 
-    return (vertex, con_nodes)
+    return data
 
 class Vertex:
     '''for color: red for visited
@@ -37,7 +38,7 @@ class Graph:
         '''add vertices to the vertex dictionary
         we check whether vertex variable pased in is acctually a vertex object not accidentlly
         assign str or other type to {vertices}'''
-        if isinstance(vertex, Vertex) and vertex.name not in self.vertices: 
+        if isinstance(vertex, Vertex) and vertex.name not in self.vertices:
             self.vertices[vertex.name] = vertex
             return True
         else:
@@ -81,7 +82,19 @@ class Graph:
                     if node_v.distance > node_u.distance + 1:
                         node_v.distance = node_u.distance +1
 
-g = Graph()
+# Testing section
+'''g = Graph()
 a = Vertex('A')
 g.add_vertex(a)
 g.add_vertex(Vertex('B'))
+
+for i in range(ord('A'), ord('K')):
+    g.add_vertex(Vertex(chr(i)))
+
+edges = ['AB', 'AE', 'BF', 'CG', 'DE', 'DH', 'EH', 'FG', 'FI', 'FJ', 'GJ', 'HI']
+
+for edge in edges:
+    g.add_edge(edge[:1], edge[1:])
+
+g.bfs(a)
+g.print_graph()'''

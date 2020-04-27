@@ -1,4 +1,5 @@
 #Author Atitawat Pol-in
+# BADS 2/61 NIDA Thailand
 
 class Graph:
     def __init__(self):

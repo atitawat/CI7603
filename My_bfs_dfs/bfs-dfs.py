@@ -11,60 +11,33 @@ class Graph:
     def printGraph(self):
         print(self.graph)
 
-    def bfs(self, start, goal):
+    def search(self, mode, start, goal):
         queue = [start]
         expand = []
+        
         while queue:
-
-            path_length = [len(path) for path in queue]
-            min_path = min(path_length)
-            min_queue = [q for q in queue if len(q) == min_path]
-
-            min_queue = sorted(min_queue, key=lambda x: x[-1])
-            dequeue = min_queue.pop(0)
+            if mode == 'BFS':
+                path_length = [len(path) for path in queue]
+                min_path = min(path_length)# using min
+                sorted_queue = [q for q in queue if len(q) == min_path]
+            elif mode == 'DFS':
+                path_length = [len(path) for path in queue]
+                max_path = max(path_length) # using max instead of min
+                sorted_queue = [q for q in queue if len(q) == max_path]
+                
+            sorted_queue.sort()
+            sorted_queue = sorted(sorted_queue, key=lambda x: x[-1])
+            dequeue = sorted_queue.pop(0)
             queue.remove(dequeue)
             expanding = dequeue[-1]
 
             if expanding in expand:
                 dup = '(' + expanding + ')'
                 expand.append(dup)
+                continue
             else:
                 expand.append(expanding)
 
-            if expanding == goal:
-                list_path = [stir for stir in dequeue]
-                prt_path = '-'.join(list_path)
-                print('Path:', prt_path)
-                print('Expand: {}'.format(" ".join(expand)))
-                break
-
-            for connecting in self.graph.get(expanding, []):
-                new_path = dequeue+connecting
-                if len(new_path) >= 3 and new_path[-1] == new_path[-3]:
-                    continue
-                else:
-                    queue.append(new_path)
-
-    def dfs(self, start, goal):
-        queue = [start]
-        expand = []
-        while queue:
-
-            path_length = [len(path) for path in queue]
-            max_path = max(path_length) # using max instead of min
-            max_queue = [q for q in queue if len(q) == max_path]
-
-            max_queue = sorted(max_queue, key=lambda x: x[-1])
-            dequeue = max_queue.pop(0)
-            queue.remove(dequeue)
-            expanding = dequeue[-1]
-
-            if expanding in expand:
-                dup = '(' + expanding + ')'
-                expand.append(dup)
-                continue # for skipping loop of death
-            else:
-                expand.append(expanding)
             if expanding == goal:
                 list_path = [stir for stir in dequeue]
                 prt_path = '-'.join(list_path)
@@ -111,6 +84,7 @@ def main():
             for k,v in data.items():
                 g.addEdge(k, v)
             print('Graph is Ready!')
+            g.printGraph()
 
             while True:
                 print('Enter Search Algorithm')
@@ -122,12 +96,10 @@ def main():
 
                 elif len(split_input) == 3:
                     mode, start, stop = split_input[0], split_input[1], split_input[2]
-
-                    if mode == 'BFS':
-                        g.bfs(start, stop)
-                    elif mode == 'DFS':
-                        g.dfs(start, stop)
-
+                    if start in g.graph.keys() and stop in g.graph.keys(): # Preventing enter unknown node
+                        g.search(mode, start, stop)
+                    else:
+                        print('Unknow Node')
                 else:
                     print('Unknown')
 
